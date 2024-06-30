@@ -2,9 +2,36 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
-use Illuminate\Pagination\Paginator;
+use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\Route;
+use App\Http\Middleware\CustomThrottleRequests;
 
+class RouteServiceProvider extends ServiceProvider
+{
+    // ...
+
+    /**
+     * Define the routes for the application.
+     *
+     * @return void
+     */
+    public function map()
+    {
+        // ...
+
+        Route::middleware('web')
+            ->namespace($this->namespace)
+            ->group(base_path('routes/web.php'));
+
+        Route::prefix('api')
+            ->middleware('api')
+            ->namespace($this->namespace)
+            ->group(base_path('routes/api.php'));
+
+        // Add this line to replace the ThrottleRequests middleware with your custom middleware
+        $this->app->router->aliasMiddleware('throttle', CustomThrottleRequests::class);
+    }
+}
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -20,6 +47,5 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Paginator::useBootstrap();
     }
 }

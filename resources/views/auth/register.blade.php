@@ -26,6 +26,7 @@
                             required autocomplete="new-password" />
 
             <x-input-error :messages="$errors->get('password')" class="mt-2" />
+            <small class="form-text text-muted">We encourage the use of a password manager to create and store strong, unique passwords.</small>
         </div>
 
         <!-- Confirm Password -->
